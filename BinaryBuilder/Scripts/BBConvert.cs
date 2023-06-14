@@ -1,119 +1,148 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Runtime.Remoting.Messaging;
+using System.Xml.Linq;
+
 
 namespace BinaryBuilder
 {
-	public class BBClassAttribute : Attribute
-	{
-	}
-
-	public class BBFieldAttribute : Attribute
-	{
-	}
-
-
 	/// <summary>
 	/// 변환기.
 	/// </summary>
 	public static class BBConvert
 	{
 		/// <summary>
-		/// 역직렬화.
+		/// 직렬화 재귀.
 		/// </summary>
-		public static object Deserialize(this BBObject _bbObject)
+		private static BBObject SerializeRecursively(BBObject _bbParentObject, object _object)
 		{
-			void Recursive(BBObject _bbChildObject)
+			var objectType = _object.GetType();
+			var bbObject = new BBObject();
+			bbObject.name = nameof(_object);
+			bbObject.objectTypeName = objectType.Name;
+			bbObject.valueType = BBUtility.GetValueType(objectType);
+			bbObject.value = String.Empty;
+			bbObject.children.Clear();
+
+			if (_bbParentObject != null)
+				_bbParentObject.children.Add(bbObject.name, bbObject);
+
+			switch (bbObject.valueType)
 			{
-				
+				case BBValueType.Boolean:
+					{
+						bbObject.value = _object.ToString().ToLower();
+						break;
+					}
+
+				case BBValueType.Number:
+					{
+						bbObject.value = _object.ToString();
+						break;
+					}
+
+				case BBValueType.String:
+					{
+						bbObject.value = _object.ToString();
+						break;
+					}
+
+				case BBValueType.Array:
+					{
+						var childObjects = (Array)_object;
+						foreach (var childObject in childObjects)
+						{
+							SerializeRecursively(bbObject, childObject);
+						}
+						break;
+					}
+
+				case BBValueType.Object:
+					{
+						var fieldInfos = objectType.GetFields();
+						foreach (var fieldInfo in fieldInfos)
+						{
+							var childObject = fieldInfo.GetValue(_object);
+							SerializeRecursively(bbObject, childObject);
+						}
+
+						break;
+					}
 			}
 
-			var instanceType = Type.GetType(_bbObject.objectTypeName);
-			var instance = Activator.CreateInstance(instanceType);
-
-
-			foreach (var bbChildObject in _bbObject.children.Values)
-			{
-				Recursive(bbChildObject);
-			}
-
-			return instance;
+			return bbObject;
 		}
-
 
 		/// <summary>
 		/// 직렬화.
 		/// </summary>
-		public static BBObject Serialize<T>(this T _instance) where T : class
+		public static BBObject Serialize(object _object)
 		{
-			BBObject Recursive(BBObject _bbParentObject, object _object, Type _objectType)
+			var bbRootObject = SerializeRecursively(null, _object);
+			return bbRootObject;
+		}
+
+		/// <summary>
+		/// 역직렬화.
+		/// </summary>
+		public static object Deserialize(BBObject _bbObject)
+		{
+			object DeserializeRecursively(BBObject _bbParentObject, object _object)
 			{
-				var bbObject = new BBObject();
-				bbObject.name = nameof(_object);
-				bbObject.objectTypeName = _objectType.Name;
-				bbObject.valueType = BBUtility.GetValueType(_objectType);
-
-				if (_bbParentObject != null)
-					_bbParentObject.children.Add(bbObject.name, bbObject);
-
-				switch (bbObject.valueType)
+				var objectType = Type.GetType(_bbObject.objectTypeName);
+				switch (_bbObject.valueType)
 				{
 					case BBValueType.Boolean:
 						{
-							bbObject.value = _instance.ToString().ToLower();
 							break;
 						}
 
 					case BBValueType.Number:
 						{
-							bbObject.value = _instance.ToString();
 							break;
 						}
 
 					case BBValueType.String:
 						{
-							bbObject.value = _instance.ToString();
+							var fieldInfo = objectType.GetField(_bbObject.name);
+							fieldInfo.SetValue(_object, _bbObject.value);
 							break;
 						}
 
 					case BBValueType.Array:
 						{
-							bbObject.value = String.Empty;
-							bbObject.children.Clear();
-							foreach (var childObject in (Array)_object)
-							{
-								Recursive(bbObject, childObject, childObject.GetType());
-							}
 							break;
 						}
 
 					case BBValueType.Object:
 						{
-							bbObject.value = String.Empty;
-							var fieldInfos = _objectType.GetFields();
-							foreach (var fieldInfo in fieldInfos)
-							{
-								var childObject = fieldInfo.GetValue(_object);
-								Recursive(bbObject, childObject, childObject.GetType());
-							}
-
-							break;
-						}
-
-					default:
-						{
-							bbObject.value = String.Empty;
-							break;
+							var childObject = Activator.CreateInstance(objectType);
+							DeserializeRecursively(_bbObject, _object);
+							return childObject;
 						}
 				}
 
-				return bbObject;
+				foreach (var bbObject in _bbParentObject.children.Values)
+				{
+				}
 			}
 
-			var objectType = typeof(T);
-			var bbRootObject = Recursive(null, _instance, objectType);
-			return bbRootObject;
+			var rootObject = DeserializeRecursively(_bbObject, null);
+			return rootObject;
+		}
+
+		/// <summary>
+		/// 직렬화.
+		/// </summary>
+		public static byte[] Serialize<T>(T _object) where T : class
+		{
+			return null;
+		}
+
+		/// <summary>
+		/// 역직렬화.
+		/// </summary>
+		public static T Deserialize<T>(byte[] _bytes) where T : class, new()
+		{
+			return default;
 		}
 	}
 }
