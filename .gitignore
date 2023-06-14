@@ -1,4 +1,5 @@
 
 .vs/BinaryBuilder/v17/.suo
 *.cache
-BinaryBuilder/obj/Debug/BinaryBuilder.csproj.FileListAbsolute.txt
+BinaryBuilder/obj
+BinaryBuilder/bin
