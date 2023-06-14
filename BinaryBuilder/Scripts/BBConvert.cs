@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-
-
+using System.Runtime.Remoting.Messaging;
 
 namespace BinaryBuilder
 {
@@ -23,9 +22,23 @@ namespace BinaryBuilder
 		/// <summary>
 		/// 역직렬화.
 		/// </summary>
-		public static T Deserialize<T>(this BBObject _bbObject) where T : class
+		public static object Deserialize(this BBObject _bbObject)
 		{
-			return null;
+			void Recursive(BBObject _bbChildObject)
+			{
+				
+			}
+
+			var instanceType = Type.GetType(_bbObject.objectTypeName);
+			var instance = Activator.CreateInstance(instanceType);
+
+
+			foreach (var bbChildObject in _bbObject.children.Values)
+			{
+				Recursive(bbChildObject);
+			}
+
+			return instance;
 		}
 
 
@@ -34,15 +47,15 @@ namespace BinaryBuilder
 		/// </summary>
 		public static BBObject Serialize<T>(this T _instance) where T : class
 		{
-			BBObject Recursive(BBObject _parent, object _object, Type _objectType)
+			BBObject Recursive(BBObject _bbParentObject, object _object, Type _objectType)
 			{
 				var bbObject = new BBObject();
 				bbObject.name = nameof(_object);
 				bbObject.objectTypeName = _objectType.Name;
 				bbObject.valueType = BBUtility.GetValueType(_objectType);
 
-				if (_parent != null)
-					_parent.children.Add(bbObject.name, bbObject);
+				if (_bbParentObject != null)
+					_bbParentObject.children.Add(bbObject.name, bbObject);
 
 				switch (bbObject.valueType)
 				{
@@ -67,8 +80,11 @@ namespace BinaryBuilder
 					case BBValueType.Array:
 						{
 							bbObject.value = String.Empty;
-							
-
+							bbObject.children.Clear();
+							foreach (var childObject in (Array)_object)
+							{
+								Recursive(bbObject, childObject, childObject.GetType());
+							}
 							break;
 						}
 
