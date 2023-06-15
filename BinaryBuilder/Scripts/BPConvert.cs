@@ -267,9 +267,6 @@ namespace BinaryPacker
 		/// </summary>
 		public static byte[] ObjectToBytes(this BPObject _bpObject)
 		{
-			if (_bpObject == null)
-				return null;
-
 			var bpBuffer = new BPBuffer();
 			bpBuffer.Write(_bpObject);
 

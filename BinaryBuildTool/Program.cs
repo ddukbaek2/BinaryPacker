@@ -64,29 +64,17 @@ namespace BinaryBuildTool
 			//endTime = DateTime.Now;
 			//Console.WriteLine("BPObject Byte To Object Time = {0:F4}s", (endTime - startTime).TotalSeconds);
 			
-			// BPObject로 변환.
+			// 데이터를 바이트로 변환.
 			startTime = DateTime.Now;
-			var bpObject = BPConvert.Serialize(originalDatas);
+			var bytes = BPConvert.Serialize(originalDatas).ObjectToBytes();
 			endTime = DateTime.Now;
-			Console.WriteLine("BPObject Serialize Time = {0:F4}s", (endTime - startTime).TotalSeconds);
+			Console.WriteLine("Data to Bytes Time = {0:F4}s", (endTime - startTime).TotalSeconds);
 
-			// 원래의 데이터로 변환.
+			// 바이트를 데이터로 변환.
 			startTime = DateTime.Now;
-			var newDatas = BPConvert.Deserialize<List<TableData>>(bpObject);
+			var newDatas = bytes.BytesToObject().Deserialize<List<TableData>>();
 			endTime = DateTime.Now;
-			Console.WriteLine("BPObject Deserialize Time = {0:F4}s", (endTime - startTime).TotalSeconds);
-
-			// 바이트배열로 변환.
-			startTime = DateTime.Now;
-			var bytes = bpObject.ObjectToBytes();
-			endTime = DateTime.Now;
-			Console.WriteLine("BPObject Object To Bytes Time = {0:F4}s", (endTime - startTime).TotalSeconds);
-
-			// BPObject로 변환.
-			startTime = DateTime.Now;
-			var bpNewObject = bytes.BytesToObject();
-			endTime = DateTime.Now;
-			Console.WriteLine("BPObject Byte To Object Time = {0:F4}s", (endTime - startTime).TotalSeconds);
+			Console.WriteLine("Bytes to Data Time = {0:F4}s", (endTime - startTime).TotalSeconds);
 
 			// 완료 후 대기.
 			Console.ReadKey();
