@@ -42,7 +42,7 @@
     <Compile Include="Scripts\BBObject.cs" />
     <Compile Include="Scripts\BBTypes.cs" />
     <Compile Include="Scripts\BBUtility.cs" />
-    <Compile Include="Scripts\BinaryBuilder.cs" />
+    <Compile Include="Scripts\BBFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scripts\BBConvert.cs" />
   </ItemGroup>

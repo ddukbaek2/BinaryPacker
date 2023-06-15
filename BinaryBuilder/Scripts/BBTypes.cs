@@ -25,6 +25,10 @@ namespace BinaryBuilder
 				return false;
 
 			loadedAssemblies.Add(_assembly.FullName, _assembly);
+
+			foreach (var type in _assembly.GetTypes())
+				BBTypes.AddType(type);
+
 			return true;
 		}
 
@@ -56,10 +60,11 @@ namespace BinaryBuilder
 			if (string.IsNullOrEmpty(_typeFullName))
 				return null;
 
-			if (!loadedTypes.TryGetValue(_typeFullName, out var type))
+			var type = Type.GetType(_typeFullName);
+			if (type == null)
 			{
-				type = Type.GetType(_typeFullName);
-				return type;
+				if (!loadedTypes.TryGetValue(_typeFullName, out type))
+					return null;
 			}
 
 			return type;

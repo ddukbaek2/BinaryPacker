@@ -59,24 +59,18 @@ namespace BinaryBuilder
 			}
 			else
 			{
-				switch (objectType.Name)
+				switch (objectType.FullName)
 				{
-					case "bool":
+					case "System.Boolean":
 						return BBValueType.Boolean;
-					case "short":
-					case "int":
-					case "long":
-					case "ushort":
-					case "uint":
-					case "ulong":
-					case "float":
-					case "double":
-					case "Int16":
-					case "UInt16":
-					case "Int32":
-					case "UInt32":
-					case "Int64":
-					case "UInt64":
+					case "System.Int16":
+					case "System.UInt16":
+					case "System.Int32":
+					case "System.UInt32":
+					case "System.Int64":
+					case "System.UInt64":
+					case "System.Single":
+					case "System.Double":
 						return BBValueType.Number;
 					default:
 						return BBValueType.String;

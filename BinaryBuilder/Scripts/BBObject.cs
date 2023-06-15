@@ -28,9 +28,9 @@ namespace BinaryBuilder
 		public List<BBObject> array = new List<BBObject>();
 		public Dictionary<string, BBObject> members = new Dictionary<string, BBObject>();
 
+		public string elementTypeFullName = string.Empty;
 		public string objectTypeFullName = string.Empty;
 		public string assemblyFullName = string.Empty;
-		public bool isGeneric = false;
 
 		public bool IsLeaf => array.Count == 0 && members.Count == 0;
 	}

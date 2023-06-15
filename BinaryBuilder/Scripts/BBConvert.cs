@@ -23,7 +23,6 @@ namespace BinaryBuilder
 			bbObject.name = _objectName;
 			bbObject.assemblyFullName = objectType.Assembly.FullName;
 			bbObject.objectTypeFullName = objectType.FullName;
-			bbObject.isGeneric = objectType.IsGenericType;
 			bbObject.type = BBUtility.GetValueType(_object);
 			bbObject.value = String.Empty;
 			bbObject.array.Clear();
@@ -59,6 +58,8 @@ namespace BinaryBuilder
 						while (childObjects.MoveNext())
 						{
 							var childObject = childObjects.Current;
+							var childObjectType = childObject.GetType();
+							bbObject.elementTypeFullName = childObjectType.FullName;
 							SerializeRecursively(bbObject, childObject, string.Empty);
 							++index;
 						}
@@ -71,6 +72,8 @@ namespace BinaryBuilder
 						foreach (var fieldInfo in fieldInfos)
 						{
 							var childObject = fieldInfo.GetValue(_object);
+							var childObjectType = childObject.GetType();
+							bbObject.elementTypeFullName = childObjectType.FullName;
 							SerializeRecursively(bbObject, childObject, fieldInfo.Name);
 						}
 
@@ -94,12 +97,6 @@ namespace BinaryBuilder
 				return null;
 			}
 
-			var types = assembly.GetTypes();
-			foreach (var type in types)
-			{
-				BBTypes.AddType(type);
-			}
-
 			switch (_bbObject.type)
 			{
 				case BBValueType.Boolean:
@@ -121,8 +118,80 @@ namespace BinaryBuilder
 								}
 							case BBValueType.Number:
 								{
-									Console.Write(_bbObject.objectTypeFullName);
-									//fieldInfo.SetValue(_parentObject, _bbObject.value);
+									switch (_bbObject.objectTypeFullName)
+									{
+										case "System.Int16":
+											{
+												if (!short.TryParse(_bbObject.value, out var shortValue))
+													shortValue = 0;
+
+												fieldInfo.SetValue(_parentObject, shortValue);
+												break;
+											}
+
+										case "System.Int32":
+											{
+												if (!int.TryParse(_bbObject.value, out var intValue))
+													intValue = 0;
+
+												fieldInfo.SetValue(_parentObject, intValue);
+												break;
+											}
+
+										case "System.Int64":
+											{
+												if (!long.TryParse(_bbObject.value, out var longValue))
+													longValue = 0;
+
+												fieldInfo.SetValue(_parentObject, longValue);
+												break;
+											}
+
+										case "System.UInt16":
+											{
+												if (!ushort.TryParse(_bbObject.value, out var ushortValue))
+													ushortValue = 0;
+
+												fieldInfo.SetValue(_parentObject, ushortValue);
+												break;
+											}
+
+										case "System.UInt32":
+											{
+												if (!uint.TryParse(_bbObject.value, out var uintValue))
+													uintValue = 0;
+
+												fieldInfo.SetValue(_parentObject, uintValue);
+												break;
+											}
+
+										case "System.UInt64":
+											{
+												if (!ulong.TryParse(_bbObject.value, out var ulongValue))
+													ulongValue = 0;
+
+												fieldInfo.SetValue(_parentObject, ulongValue);
+												break;
+											}
+
+										case "System.Single":
+											{
+												if (!float.TryParse(_bbObject.value, out var floatValue))
+													floatValue = 0;
+
+												fieldInfo.SetValue(_parentObject, floatValue);
+												break;
+											}
+
+										case "System.Double":
+											{
+												if (!double.TryParse(_bbObject.value, out var doubleValue))
+													doubleValue = 0;
+
+												fieldInfo.SetValue(_parentObject, doubleValue);
+												break;
+											}
+									}
 									break;
 								}
 							case BBValueType.String:
@@ -136,6 +205,21 @@ namespace BinaryBuilder
 					}
 
 				case BBValueType.Array:
+					{
+						var objectType = BBTypes.GetType(_bbObject.elementTypeFullName);
+						var array = Array.CreateInstance(objectType, _bbObject.array.Count);
+
+						var index = 0;
+						foreach (var bbChildObject in _bbObject.array)
+						{
+							var childObject = DeserializeRecursively(bbChildObject, array);
+							array.SetValue(childObject, index);
+							++index;
+						}
+
+						return array;
+					}
+
 				case BBValueType.Object:
 					{
 						var objectType = BBTypes.GetType(_bbObject.objectTypeFullName);
@@ -159,10 +243,10 @@ namespace BinaryBuilder
 		/// <summary>
 		/// 직렬화.
 		/// </summary>
-		public static BBObject Serialize(object _object)
+		public static BBObject Serialize<T>(this T _object) where T : class
 		{
 			if (_object == null)
-				return new BBObject();
+				return null;
 
 			var bbRootObject = SerializeRecursively(null, _object, string.Empty);
 			return bbRootObject;
@@ -171,29 +255,32 @@ namespace BinaryBuilder
 		/// <summary>
 		/// 역직렬화.
 		/// </summary>
-		public static object Deserialize(BBObject _bbObject)
+		public static T Deserialize<T>(this BBObject _bbObject) where T : class
 		{
 			if (_bbObject == null)
-				return null;
+				return default(T);
 
-			var @object = DeserializeRecursively(_bbObject, null);
-			return @object;
+			var rootObject = DeserializeRecursively(_bbObject, null) as T;
+			return rootObject;
 		}
 
-		///// <summary>
-		///// 직렬화.
-		///// </summary>
-		//public static byte[] Serialize<T>(T _object) where T : class
-		//{
-		//	return null;
-		//}
+		/// <summary>
+		/// 오브젝트를 바이트배열로 변환.
+		/// </summary>
+		public static byte[] ToBytes(this BBObject _object)
+		{
+			if (_object == null)
+				return byte[0];
 
-		///// <summary>
-		///// 역직렬화.
-		///// </summary>
-		//public static T Deserialize<T>(byte[] _bytes) where T : class, new()
-		//{
-		//	return default;
-		//}
+			return null;
+		}
+
+		/// <summary>
+		/// 바이트배열을 오브젝트로 변환.
+		/// </summary>
+		public static BBObject ToBBObject(this byte[] _bytes)
+		{
+			return default;
+		}
 	}
 }
