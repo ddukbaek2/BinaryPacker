@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BinaryBuilder\BinaryBuilder.csproj" />
+    <ProjectReference Include="..\BinaryBuilder\BinaryPacker.csproj" />
   </ItemGroup>
 
 </Project>

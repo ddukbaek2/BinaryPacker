@@ -39,10 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Scripts\BBFileStream.cs" />
     <Compile Include="Scripts\BBObject.cs" />
     <Compile Include="Scripts\BBTypes.cs" />
     <Compile Include="Scripts\BBUtility.cs" />
-    <Compile Include="Scripts\BBFile.cs" />
+    <Compile Include="Scripts\BBNativeObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scripts\BBConvert.cs" />
   </ItemGroup>

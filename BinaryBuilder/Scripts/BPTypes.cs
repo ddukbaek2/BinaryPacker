@@ -3,19 +3,35 @@ using System.Collections.Generic;
 using System.Reflection;
 
 
-namespace BinaryBuilder
+namespace BinaryPacker
 {
-	public static class BBTypes
+	/// <summary>
+	/// 타입.
+	/// </summary>
+	public static class BPTypes
 	{
+		/// <summary>
+		/// 로드된 어셈블리목록.
+		/// </summary>
 		private static Dictionary<string, Assembly> loadedAssemblies = new Dictionary<string, Assembly>();
+
+		/// <summary>
+		/// 로드된 타입목록.
+		/// </summary>
 		private static Dictionary<string, Type> loadedTypes = new Dictionary<string, Type>();
 
+		/// <summary>
+		/// 어셈블리 로드.
+		/// </summary>
 		public static bool LoadAssembly(string _assemblyFullName)
 		{
 			var assembly = Assembly.Load(_assemblyFullName);
 			return AddAssembly(assembly);
 		}
 
+		/// <summary>
+		/// 어셈블리 추가.
+		/// </summary>
 		public static bool AddAssembly(Assembly _assembly)
 		{
 			if (_assembly == null)
@@ -27,11 +43,14 @@ namespace BinaryBuilder
 			loadedAssemblies.Add(_assembly.FullName, _assembly);
 
 			foreach (var type in _assembly.GetTypes())
-				BBTypes.AddType(type);
+				BPTypes.AddType(type);
 
 			return true;
 		}
 
+		/// <summary>
+		/// 어셈블리 가져오거나 추가.
+		/// </summary>
 		public static Assembly GetOrAddAssembly(string _assemblyFullName)
 		{
 			if (!loadedAssemblies.TryGetValue(_assemblyFullName, out var assembly) || assembly == null)
@@ -43,6 +62,9 @@ namespace BinaryBuilder
 			return assembly;
 		}
 
+		/// <summary>
+		/// 타입 추가.
+		/// </summary>
 		public static bool AddType(Type _type)
 		{
 			if (_type == null)
@@ -55,6 +77,9 @@ namespace BinaryBuilder
 			return true;
 		}
 
+		/// <summary>
+		/// 타입 반환.
+		/// </summary>
 		public static Type GetType(string _typeFullName)
 		{
 			if (string.IsNullOrEmpty(_typeFullName))
