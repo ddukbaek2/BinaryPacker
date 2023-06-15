@@ -7,8 +7,8 @@
     <ProjectGuid>{5F23D0DB-1BFC-4F07-9207-5851D1970387}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BinaryBuilder</RootNamespace>
-    <AssemblyName>BinaryBuilder</AssemblyName>
+    <RootNamespace>BinaryPacker</RootNamespace>
+    <AssemblyName>BinaryPacker</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -40,12 +40,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Scripts\BBFileStream.cs" />
-    <Compile Include="Scripts\BBObject.cs" />
-    <Compile Include="Scripts\BBTypes.cs" />
-    <Compile Include="Scripts\BBUtility.cs" />
+    <Compile Include="Scripts\BPObject.cs" />
+    <Compile Include="Scripts\BPTypes.cs" />
+    <Compile Include="Scripts\BPUtility.cs" />
     <Compile Include="Scripts\BBNativeObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scripts\BBConvert.cs" />
+    <Compile Include="Scripts\BPConvert.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

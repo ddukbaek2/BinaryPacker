@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.33529.622
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryPacker", "BinaryBuilder\BinaryPacker.csproj", "{5F23D0DB-1BFC-4F07-9207-5851D1970387}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BinaryBuilder", "BinaryBuildTool\BinaryBuilder.csproj", "{4EA7DF77-3B88-4D6A-A30A-92A40B4A080D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BinaryBuildTool", "BinaryBuildTool\BinaryBuildTool.csproj", "{4EA7DF77-3B88-4D6A-A30A-92A40B4A080D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
