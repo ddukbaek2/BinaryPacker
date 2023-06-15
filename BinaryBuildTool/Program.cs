@@ -19,6 +19,7 @@ namespace BinaryBuildTool
 			public float position;
 		}
 
+
 		public static void Main(string[] args)
 		{
 			var originalDatas = new List<TableData>();
