@@ -26,9 +26,9 @@ namespace BinaryPacker
 		public BPValueType type = BPValueType.None;
 		public string value = string.Empty;
 
-		public string elementTypeFullName = string.Empty;
-		public string objectTypeFullName = string.Empty;
 		public string assemblyFullName = string.Empty;
+		public string objectTypeFullName = string.Empty;
+		public string elementTypeFullName = string.Empty;
 
 		public List<BPObject> array = new List<BPObject>();
 		public Dictionary<string, BPObject> members = new Dictionary<string, BPObject>();

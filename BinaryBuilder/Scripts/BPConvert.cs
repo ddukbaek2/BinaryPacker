@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
 
 
 namespace BinaryPacker
@@ -267,20 +265,30 @@ namespace BinaryPacker
 		/// <summary>
 		/// 오브젝트를 바이트배열로 변환.
 		/// </summary>
-		public static byte[] ToBytes(this BPObject _bpObject)
+		public static byte[] ObjectToBytes(this BPObject _bpObject)
 		{
 			if (_bpObject == null)
 				return null;
 
-			return null;
+			var bpBuffer = new BPBuffer();
+			bpBuffer.Write(_bpObject);
+
+			return bpBuffer.ByteArray;
 		}
 
 		/// <summary>
 		/// 바이트배열을 오브젝트로 변환.
 		/// </summary>
-		public static BPObject ToBPObject(this byte[] _bytes)
+		public static BPObject BytesToObject(this byte[] _bytes)
 		{
-			return null;
+			if (_bytes == null || _bytes.Length == 0)
+				return null;
+
+			var bpBuffer = new BPBuffer(_bytes);
+			if (!bpBuffer.Read(out BPObject bpObject))
+				return null;
+
+			return bpObject;
 		}
 	}
 }
