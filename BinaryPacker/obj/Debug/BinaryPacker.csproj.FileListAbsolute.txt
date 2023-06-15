@@ -1,0 +1,6 @@
+D:\Github\BinaryPacker\BinaryPacker\bin\Debug\BinaryPacker.dll
+D:\Github\BinaryPacker\BinaryPacker\bin\Debug\BinaryPacker.pdb
+D:\Github\BinaryPacker\BinaryPacker\obj\Debug\BinaryPacker.csproj.AssemblyReference.cache
+D:\Github\BinaryPacker\BinaryPacker\obj\Debug\BinaryPacker.csproj.CoreCompileInputs.cache
+D:\Github\BinaryPacker\BinaryPacker\obj\Debug\BinaryPacker.dll
+D:\Github\BinaryPacker\BinaryPacker\obj\Debug\BinaryPacker.pdb
