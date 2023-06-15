@@ -24,7 +24,7 @@ namespace BinaryBuildTool
 		{
 			var originalDatas = new List<TableData>();
 
-			const int maxCount = 1000;
+			const int maxCount = 20000;
 			for (var i = 0; i < maxCount; ++i)
 			{
 				var tableData = new TableData
@@ -67,13 +67,13 @@ namespace BinaryBuildTool
 			
 			// 데이터를 바이트로 변환.
 			startTime = DateTime.Now;
-			var bytes = BPConvert.Serialize(originalDatas).ObjectToBytes();
+			var bytes = BPConvert.Serialize(originalDatas);
 			endTime = DateTime.Now;
 			Console.WriteLine("Data to Bytes Time = {0:F4}s", (endTime - startTime).TotalSeconds);
 
 			// 바이트를 데이터로 변환.
 			startTime = DateTime.Now;
-			var newDatas = bytes.BytesToObject().Deserialize<List<TableData>>();
+			var newDatas = BPConvert.Deserialize<List<TableData>>(bytes);
 			endTime = DateTime.Now;
 			Console.WriteLine("Bytes to Data Time = {0:F4}s", (endTime - startTime).TotalSeconds);
 

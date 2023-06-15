@@ -241,7 +241,7 @@ namespace BinaryPacker
 		/// <summary>
 		/// 직렬화.
 		/// </summary>
-		public static BPObject Serialize<T>(this T _object) where T : class
+		public static BPObject ObjectToBPObject<T>(T _object) where T : class
 		{
 			if (_object == null)
 				return null;
@@ -253,7 +253,7 @@ namespace BinaryPacker
 		/// <summary>
 		/// 역직렬화.
 		/// </summary>
-		public static T Deserialize<T>(this BPObject _bpObject) where T : class
+		public static T BPObjectToObject<T>(BPObject _bpObject) where T : class
 		{
 			if (_bpObject == null)
 				return default(T);
@@ -265,7 +265,7 @@ namespace BinaryPacker
 		/// <summary>
 		/// 오브젝트를 바이트배열로 변환.
 		/// </summary>
-		public static byte[] ObjectToBytes(this BPObject _bpObject)
+		public static byte[] BPObjectToBytes(BPObject _bpObject)
 		{
 			var bpBuffer = new BPBuffer();
 			bpBuffer.Write(_bpObject);
@@ -276,7 +276,7 @@ namespace BinaryPacker
 		/// <summary>
 		/// 바이트배열을 오브젝트로 변환.
 		/// </summary>
-		public static BPObject BytesToObject(this byte[] _bytes)
+		public static BPObject BytesToBPObject(byte[] _bytes)
 		{
 			if (_bytes == null || _bytes.Length == 0)
 				return null;
@@ -286,6 +286,25 @@ namespace BinaryPacker
 				return null;
 
 			return bpObject;
+		}
+
+		/// <summary>
+		/// 오브젝트를 바이트배열로 변환.
+		/// </summary>
+		public static byte[] Serialize<T>(T _object) where T : class
+		{
+			var bpObject = BPConvert.ObjectToBPObject<T>(_object);
+			var bytes = BPConvert.BPObjectToBytes(bpObject);
+			return bytes;
+		}
+
+		/// <summary>
+		/// 바이트배열을 오브젝트로 변환.
+		/// </summary>
+		public static T Deserialize<T>(byte[] _bytes) where T : class
+		{
+			var bpObject = BPConvert.BytesToBPObject(_bytes);
+			return BPConvert.BPObjectToObject<T>(bpObject);
 		}
 	}
 }
