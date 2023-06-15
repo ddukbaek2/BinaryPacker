@@ -24,7 +24,7 @@ namespace BinaryBuildTool
 		{
 			var originalDatas = new List<TableData>();
 
-			const int maxCount = 20000;
+			const int maxCount = 1000;
 			for (var i = 0; i < maxCount; ++i)
 			{
 				var tableData = new TableData

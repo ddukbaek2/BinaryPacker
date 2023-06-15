@@ -9,11 +9,11 @@ namespace BinaryPacker
 	public enum BPValueType
 	{
 		None,
-		Boolean,
-		Number,
-		String,
-		Array,
-		Object,
+		Boolean, // bool
+		Number, // short, int, long, ushort, uint, ulong, float, double
+		String, // string
+		Array, // List<T>, T[]
+		Object, // class
 	}
 
 

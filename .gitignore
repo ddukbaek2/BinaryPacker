@@ -1,8 +1,7 @@
 
-.vs/BinaryBuilder/v17/.suo
-*.cache
-BinaryBuilder/obj
-BinaryBuilder/bin
 .vs
+*.cache
+BinaryPacker/obj
+BinaryPacker/bin
 BinaryBuildTool/obj
 BinaryBuildTool/bin

@@ -204,18 +204,35 @@ namespace BinaryPacker
 
 				case BPValueType.Array:
 					{
-						var objectType = BPTypes.GetType(_bpObject.elementTypeFullName);
-						var array = Array.CreateInstance(objectType, _bpObject.array.Count);
-
-						var index = 0;
-						foreach (var bpChildObject in _bpObject.array)
+						var arrayType = BPTypes.GetType(_bpObject.objectTypeFullName);
+						if (arrayType.IsGenericType)
 						{
-							var childObject = DeserializeRecursively(bpChildObject, array);
-							array.SetValue(childObject, index);
-							++index;
-						}
+							var collection = Activator.CreateInstance(arrayType);
+							var methodInfo = arrayType.GetMethod("Add");
+							foreach (var bpChildObject in _bpObject.array)
+							{
+								var childObject = DeserializeRecursively(bpChildObject, collection);
+								methodInfo.Invoke(collection, new object[] { childObject });
+							}
 
-						return array;
+							return collection;
+						}
+						else
+						{
+							var objectType = BPTypes.GetType(_bpObject.elementTypeFullName);
+							var array = Array.CreateInstance(objectType, _bpObject.array.Count);
+
+							var index = 0;
+							foreach (var bpChildObject in _bpObject.array)
+							{
+								var childObject = DeserializeRecursively(bpChildObject, array);
+								array.SetValue(childObject, index);
+								++index;
+							}
+
+							return array;
+						}
+						break;
 					}
 
 				case BPValueType.Object:
