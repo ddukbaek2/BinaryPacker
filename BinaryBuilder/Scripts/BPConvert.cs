@@ -258,8 +258,8 @@ namespace BinaryPacker
 			if (_bpObject == null)
 				return default(T);
 
-			var rootObject = DeserializeRecursively(_bpObject, null) as T;
-			return rootObject;
+			var rootObject = DeserializeRecursively(_bpObject, null);
+			return (T)rootObject;
 		}
 
 		/// <summary>

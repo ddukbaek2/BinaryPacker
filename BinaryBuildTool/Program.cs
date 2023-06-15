@@ -67,7 +67,7 @@ namespace BinaryBuildTool
 			
 			// 데이터를 바이트로 변환.
 			startTime = DateTime.Now;
-			var bytes = BPConvert.Serialize(originalDatas);
+			var bytes = BPConvert.Serialize<List<TableData>>(originalDatas);
 			endTime = DateTime.Now;
 			Console.WriteLine("Data to Bytes Time = {0:F4}s", (endTime - startTime).TotalSeconds);
 
