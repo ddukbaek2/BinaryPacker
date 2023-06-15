@@ -3,3 +3,6 @@
 *.cache
 BinaryBuilder/obj
 BinaryBuilder/bin
+.vs
+BinaryBuildTool/obj
+BinaryBuildTool/bin

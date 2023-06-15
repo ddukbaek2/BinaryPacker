@@ -23,9 +23,15 @@ namespace BinaryBuilder
 	public class BBObject
 	{
 		public string name = string.Empty;
-		public string objectTypeName = string.Empty;
-		public BBValueType valueType = BBValueType.None;
+		public BBValueType type = BBValueType.None;
 		public string value = string.Empty;
-		public Dictionary<string, BBObject> children = new Dictionary<string, BBObject>();
+		public List<BBObject> array = new List<BBObject>();
+		public Dictionary<string, BBObject> members = new Dictionary<string, BBObject>();
+
+		public string objectTypeFullName = string.Empty;
+		public string assemblyFullName = string.Empty;
+		public bool isGeneric = false;
+
+		public bool IsLeaf => array.Count == 0 && members.Count == 0;
 	}
 }
