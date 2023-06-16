@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using BinaryPacker;
+
 
 
 namespace BinaryBuildTool
@@ -10,31 +13,45 @@ namespace BinaryBuildTool
 	/// </summary>
 	public static class Program
 	{
+		/// <summary>
+		/// 열거체.
+		/// </summary>
+		public enum TableEnum
+		{
+			Case1 = 100000,
+			Case2 = 200000,
+			Case3 = 300000,
+		}
+
+
 		// 변환할 데이터 포맷.
 		public class TableData
 		{
 			public int id;
-			//public string value;
-			//public bool isFlag;
-			//public float position;
+			public TableEnum tableEnum;
+			public string value;
 		}
 
 
 		/// <summary>
+		/// 랜덤.
+		/// </summary>
+		private static readonly Random random = new Random();
+
+		/// <summary>
 		/// 시작됨.
 		/// </summary>
-		public static void Main(string[] args)
+		public static void Main(string[] _args)
 		{
-			var maxCount = 1000;
+			var maxCount = 100000;
 			var originalDatas = new List<TableData>(maxCount);
 			for (var i = 0; i < maxCount; ++i)
 			{
 				var tableData = new TableData
 				{
 					id = i + 1,
-					//value = i.ToString(),
-					//isFlag = i % 2 == 0,
-					//position = 15.5678f,
+					tableEnum = TableEnum.Case3,
+					value = RandomText(random.Next(20)),
 				};
 
 				originalDatas.Add(tableData);
@@ -51,16 +68,37 @@ namespace BinaryBuildTool
 			startTime = DateTime.Now;
 			var byteArray = BPConvert.Serialize<List<TableData>>(originalDatas);
 			endTime = DateTime.Now;
-			Console.WriteLine("Data to ByteArray Time = {0:F4}s", (endTime - startTime).TotalSeconds);
+			Console.WriteLine("Serialize() : {0:F4}s", (endTime - startTime).TotalSeconds);
+
+			// 바이트배열을 파일로 저장.
+			startTime = DateTime.Now;
+			File.WriteAllBytes("C:\\data.bytes", byteArray);
+			endTime = DateTime.Now;
+			Console.WriteLine("WriteFile() : {0:F4}s", (endTime - startTime).TotalSeconds);
+
+			// 파일에서 바이트배열 불러오기.
+			startTime = DateTime.Now;
+			var result = File.ReadAllBytes("C:\\data.bytes");
+			endTime = DateTime.Now;
+			Console.WriteLine("ReadFile() : {0:F4}s", (endTime - startTime).TotalSeconds);
 
 			// 바이트배열을 데이터로 변환.
 			startTime = DateTime.Now;
-			var newDatas = BPConvert.Deserialize<List<TableData>>(byteArray);
+			var newDatas = BPConvert.Deserialize<List<TableData>>(result);
 			endTime = DateTime.Now;
-			Console.WriteLine("ByteArray to Data Time = {0:F4}s", (endTime - startTime).TotalSeconds);
+			Console.WriteLine("Deserialize() : {0:F4}s", (endTime - startTime).TotalSeconds);
 
 			// 완료 후 대기.
 			Console.ReadKey();
+		}
+
+		/// <summary>
+		/// 랜덤문자열 반환.
+		/// </summary>
+		public static string RandomText(int _count)
+		{
+			const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+			return new string(Enumerable.Repeat(chars, _count).Select(s => s[random.Next(s.Length)]).ToArray());
 		}
 	}
 }

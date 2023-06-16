@@ -33,7 +33,7 @@ namespace BinaryPacker
 					case BPValueType.Array:
 						_bpParentObject.array.Add(bpObject);
 						break;
-					case BPValueType.Object:
+					case BPValueType.Class:
 						_bpParentObject.members.Add(_objectName, bpObject);
 						break;
 				}
@@ -44,6 +44,7 @@ namespace BinaryPacker
 				case BPValueType.Boolean:
 				case BPValueType.Number:
 				case BPValueType.String:
+				case BPValueType.Enum:
 					{
 						bpObject.value = _object.ToString();
 						break;
@@ -64,7 +65,7 @@ namespace BinaryPacker
 						break;
 					}
 
-				case BPValueType.Object:
+				case BPValueType.Class:
 					{
 						var fieldInfos = objectType.GetFields();
 						foreach (var fieldInfo in fieldInfos)
@@ -100,6 +101,7 @@ namespace BinaryPacker
 				case BPValueType.Boolean:
 				case BPValueType.Number:
 				case BPValueType.String:
+				case BPValueType.Enum:
 					{
 						var parentObjectType = _parentObject.GetType();
 						var fieldInfo = parentObjectType.GetField(_bpObject.name);
@@ -192,9 +194,18 @@ namespace BinaryPacker
 									}
 									break;
 								}
+
 							case BPValueType.String:
 								{
 									fieldInfo.SetValue(_parentObject, _bpObject.value);
+									break;
+								}
+
+							case BPValueType.Enum:
+								{
+									var enumType = BPTypes.GetType(_bpObject.objectTypeFullName);
+									var enumValue = Enum.Parse(enumType, _bpObject.value);
+									fieldInfo.SetValue(_parentObject, enumValue);
 									break;
 								}
 						}
@@ -234,7 +245,7 @@ namespace BinaryPacker
 						}
 					}
 
-				case BPValueType.Object:
+				case BPValueType.Class:
 					{
 						var objectType = BPTypes.GetType(_bpObject.objectTypeFullName);
 						var @object = Activator.CreateInstance(objectType);
