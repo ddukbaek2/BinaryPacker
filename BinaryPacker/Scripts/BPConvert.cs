@@ -232,7 +232,6 @@ namespace BinaryPacker
 
 							return array;
 						}
-						break;
 					}
 
 				case BPValueType.Object:
