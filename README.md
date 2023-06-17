@@ -17,6 +17,4 @@ List와 배열을 지원하고 Dictionary 등의 연관배열은 지원하지 �
 Number의 경우 short, int, long, ushort, uint, ulong, float, double을 지원합니다.
 
 
-내부적으로 객체를 BPObject 라는 자체 객체로 변환하거나 그 반대의 경우로도 변환이 가능합니다.
-
-byte 변환은 메모리에 할당된 BPObject를 통해 변환되는 것 이므로 BPObject의 내부 구조가 바뀌지 않으면 데이터는 계속 호환됩니다.
+내부적으로 오브젝트는 BPObject 라는 자체 객체로 변환되며 byte 변환은 BPObject를 byte로 변환하는 것이므로 BPObject의 내부 구조가 바뀌지 않으면 데이터는 계속 호환됩니다.
