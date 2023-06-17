@@ -12,7 +12,7 @@ XML, JSON, BinaryFormatter를 사용하지 않고 순수 Reflection만을 이용
 
 List와 배열을 지원하고 Dictionary 등의 연관배열은 지원하지 않습니다.
 
-값타입은 JSON 처럼 Boolean, Number, String 을 사용가능하며 Enum을 별도 타입으로 지원합니다.
+일반적인 변수는 JSON 처럼 Boolean, Number, String 을 사용가능하며 Enum을 추가 타입으로 지원합니다.
 
 Number의 경우 short, int, long, ushort, uint, ulong, float, double을 지원합니다.
 
